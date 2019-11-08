@@ -102,3 +102,11 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+#autovc
+*.wav
+checkpoint_step001000000_ema.pth
+autovc.ckpt
+.ipynb_checkpoints
+__pycache__
+results.pkl
