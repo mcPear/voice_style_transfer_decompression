@@ -2,12 +2,11 @@ import tensorflow as tf
 import numpy as np
 import os
 import time
-from utils import random_batch, normalize, similarity, loss_cal, optim, mel_to_batch
+from utils import random_batch, normalize, similarity, loss_cal, optim
 from configuration import get_config
 from tensorflow_addons import rnn
 from tensorflow.compat.v1 import placeholder
 from tensorflow.compat.v1.nn.rnn_cell import LSTMCell, MultiRNNCell
-from data_preprocess import to_spectrogram
 
 config = get_config()
 
@@ -84,7 +83,7 @@ def train(path):
 
 
 # Test Session
-def test_original(path):
+def test(path):
     tf.compat.v1.reset_default_graph()
 
     # draw graph
@@ -167,64 +166,4 @@ def test_original(path):
                 EER_FRR = FRR
 
         print("\nEER : %0.2f (thres:%0.2f, FAR:%0.2f, FRR:%0.2f)"%(EER,EER_thres,EER_FAR,EER_FRR))
-        
-        
-def test(path, wav_path = r'/home/maciej/Desktop/tf_working_dir/SKAJPAI/voice_style_transfer/Speaker_Verification/p232_019.wav'):
-    mel = to_spectrogram(wav_path)
-    uttr_count = len(mel)
-    
-    tf.compat.v1.reset_default_graph()
-    N=1
-    M=1
-    # draw graph
-    enroll = placeholder(shape=[None, uttr_count, 40], dtype=tf.float32) # enrollment batch (time x batch x n_mel)
-    verif = placeholder(shape=[None, uttr_count, 40], dtype=tf.float32)  # verification batch (time x batch x n_mel)
-    batch = tf.compat.v1.concat([enroll, verif], axis=1)
-
-    # embedding lstm (3-layer default)
-    with tf.compat.v1.variable_scope("lstm"):
-        lstm_cells = [LSTMCell(num_units=config.hidden, num_proj=config.proj) for i in range(config.num_layer)]
-        lstm = MultiRNNCell(lstm_cells)    # make lstm op and variables
-        outputs, _ = tf.compat.v1.nn.dynamic_rnn(cell=lstm, inputs=batch, dtype=tf.float32, time_major=True)   # for TI-VS must use dynamic rnn
-        embedded = outputs[-1]                            # the last ouput is the embedded d-vector
-        embedded = normalize(embedded)                    # normalize
-
-    print("embedded size: ", embedded.shape)
-
-    # enrollment embedded vectors (speaker model)
-    enroll_embed = normalize(tf.reduce_mean(tf.reshape(embedded[:uttr_count, :], shape= [1, uttr_count, -1]), axis=1)) # tu robi średnią po wypowiedziach, czyli de facto interesuje mnie bardziej verif_embed
-    # verification embedded vectors
-    verif_embed = embedded[uttr_count:, :]
-
-    saver = tf.compat.v1.train.Saver(var_list=tf.compat.v1.global_variables())
-    with tf.compat.v1.Session() as sess:
-        tf.compat.v1.global_variables_initializer().run()
-
-        # load model
-        print("model path :", path)
-        ckpt = tf.compat.v1.train.get_checkpoint_state(checkpoint_dir=os.path.join(path, "Check_Point"))
-        ckpt_list = ckpt.all_model_checkpoint_paths
-        loaded = 0
-        for model in ckpt_list:
-            if config.model_num == int(model[-1]):    # find ckpt file which matches configuration model number
-                print("ckpt file is loaded !", model)
-                loaded = 1
-                saver.restore(sess, model)  # restore variables from selected ckpt file
-                break
-
-        if loaded == 0:
-            raise AssertionError("ckpt file does not exist! Check config.model_num or config.model_path.")
-
-        print("test file path : ", config.test_path)
-
-        # return similarity matrix after enrollment and verification
-        time1 = time.time() # for check inference time
-        if config.tdsv:
-            result_embedding = sess.run(enroll_embed, feed_dict={enroll:mel_to_batch(mel),
-                                                       verif:mel_to_batch(mel)})
-        else:
-            result_embedding = sess.run(enroll_embed, feed_dict={enroll:mel_to_batch(mel),
-                                                       verif:mel_to_batch(mel)})
-        print(result_embedding)
-
 

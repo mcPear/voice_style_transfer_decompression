@@ -93,15 +93,6 @@ def random_batch(speaker_num=config.N, utter_num=config.M, shuffle=True, noise_f
 
     return utter_batch
 
-def mel_to_batch(utter):
-    utter_batch = np.asarray(utter)
-    utter_batch = utter_batch[:,:,:160]               # for test session, fixed length slicing of input batch
-    print(utter_batch.shape)
-    utter_batch = np.transpose(utter_batch, axes=(2,0,1))     # transpose [frames, batch, n_mels]
-    
-    return utter_batch
-
-
 def normalize(x):
     """ normalize the last dimension vector of the input matrix
     :return: normalized input
