@@ -10,9 +10,9 @@ import librosa
 config = get_config()   # get arguments from parser
 
 # downloaded dataset path
-audio_path= r'/home/maciej/Desktop/tf_working_dir/SKAJPAI/Speaker_Verification/VCTK-Corpus/wav48'                                          # utterance dataset
-clean_path = r'/home/maciej/Desktop/tf_working_dir/SKAJPAI/Speaker_Verification/clean_testset_wav'  # clean dataset
-noisy_path = r'/home/maciej/Desktop/tf_working_dir/SKAJPAI/Speaker_Verification/noisy_testset_wav'  # noisy dataset
+audio_path= r'/home/maciej/Desktop/tf_working_dir/SKAJPAI/voice_style_transfer/Speaker_Verification/VCTK-Corpus/wav48'                                          # utterance dataset
+clean_path = r'/home/maciej/Desktop/tf_working_dir/SKAJPAI/voice_style_transfer/Speaker_Verification/clean_testset_wav'  # clean dataset
+noisy_path = r'/home/maciej/Desktop/tf_working_dir/SKAJPAI/voice_style_transfer/Speaker_Verification/noisy_testset_wav'  # noisy dataset
 
 def extract_noise():
     """ Extract noise and save the spectrogram (as numpy array in config.noise_path)

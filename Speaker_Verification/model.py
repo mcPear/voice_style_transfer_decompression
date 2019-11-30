@@ -169,7 +169,7 @@ def test_original(path):
         print("\nEER : %0.2f (thres:%0.2f, FAR:%0.2f, FRR:%0.2f)"%(EER,EER_thres,EER_FAR,EER_FRR))
         
         
-def test(path, wav_path = r'/home/maciej/Desktop/tf_working_dir/SKAJPAI/Speaker_Verification/p232_019.wav'):
+def test(path, wav_path = r'/home/maciej/Desktop/tf_working_dir/SKAJPAI/voice_style_transfer/Speaker_Verification/p232_019.wav'):
     mel = to_spectrogram(wav_path)
     uttr_count = len(mel)
     
