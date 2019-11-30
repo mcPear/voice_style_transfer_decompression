@@ -31,11 +31,12 @@ data_arg.add_argument('--window', type=int, default=0.025, help="window length (
 data_arg.add_argument('--hop', type=int, default=0.01, help="hop size (ms)")
 data_arg.add_argument('--tdsv_frame', type=int, default=80, help="frame number of utterance of tdsv")
 data_arg.add_argument('--tisv_frame', type=int, default=180, help="max frame number of utterances of tdsv")
+data_arg.add_argument('--mel_size', type=int, default=80)
 
 # Model Parameters
 model_arg = parser.add_argument_group('Model')
-model_arg.add_argument('--hidden', type=int, default=128, help="hidden state dimension of lstm")
-model_arg.add_argument('--proj', type=int, default=64, help="projection dimension of lstm")
+model_arg.add_argument('--hidden', type=int, default=768, help="hidden state dimension of lstm") #128/768 td/ti
+model_arg.add_argument('--proj', type=int, default=256, help="projection dimension of lstm") #64/256 td/ti
 model_arg.add_argument('--num_layer', type=int, default=3, help="number of lstm layers")
 model_arg.add_argument('--restore', type=str2bool, default=False, help="restore model or not")
 model_arg.add_argument('--model_path', type=str, default='./tisv_model', help="model directory to save or load")

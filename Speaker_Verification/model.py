@@ -15,17 +15,17 @@ def train(path):
     tf.compat.v1.reset_default_graph()    # reset graph
 
     # draw graph
-    batch = placeholder(shape= [None, config.N*config.M, 40], dtype=tf.float32)  # input batch (time x batch x n_mel)
-    lr = placeholder(dtype= tf.float32)  # learning rate
+    batch = placeholder(shape= [None, config.N*config.M, config.mel_size], dtype=tf.float16)  # input batch (time x batch x n_mel)
+    lr = placeholder(dtype= tf.float16)  # learning rate
     global_step = tf.Variable(0, name='global_step', trainable=False)
-    w = tf.compat.v1.get_variable("w", initializer= np.array([10], dtype=np.float32))
-    b = tf.compat.v1.get_variable("b", initializer= np.array([-5], dtype=np.float32))
+    w = tf.compat.v1.get_variable("w", initializer= np.array([10], dtype=np.float16))
+    b = tf.compat.v1.get_variable("b", initializer= np.array([-5], dtype=np.float16))
 
     # embedding lstm (3-layer default)
     with tf.compat.v1.variable_scope("lstm"):
         lstm_cells = [LSTMCell(num_units=config.hidden, num_proj=config.proj) for i in range(config.num_layer)]
         lstm = MultiRNNCell(lstm_cells)    # define lstm op and variables
-        outputs, _ = tf.compat.v1.nn.dynamic_rnn(cell=lstm, inputs=batch, dtype=tf.float32, time_major=True)   # for TI-VS must use dynamic rnn
+        outputs, _ = tf.compat.v1.nn.dynamic_rnn(cell=lstm, inputs=batch, dtype=tf.float16, time_major=True)   # for TI-VS must use dynamic rnn
         embedded = outputs[-1]                            # the last ouput is the embedded d-vector
         embedded = normalize(embedded)                    # normalize
     print("embedded size: ", embedded.shape)
@@ -87,15 +87,15 @@ def test(path):
     tf.compat.v1.reset_default_graph()
 
     # draw graph
-    enroll = placeholder(shape=[None, config.N*config.M, 40], dtype=tf.float32) # enrollment batch (time x batch x n_mel)
-    verif = placeholder(shape=[None, config.N*config.M, 40], dtype=tf.float32)  # verification batch (time x batch x n_mel)
+    enroll = placeholder(shape=[None, config.N*config.M, config.mel_size], dtype=tf.float16) # enrollment batch (time x batch x n_mel)
+    verif = placeholder(shape=[None, config.N*config.M, config.mel_size], dtype=tf.float16)  # verification batch (time x batch x n_mel)
     batch = tf.compat.v1.concat([enroll, verif], axis=1)
 
     # embedding lstm (3-layer default)
     with tf.compat.v1.variable_scope("lstm"):
         lstm_cells = [LSTMCell(num_units=config.hidden, num_proj=config.proj) for i in range(config.num_layer)]
         lstm = MultiRNNCell(lstm_cells)    # make lstm op and variables
-        outputs, _ = tf.compat.v1.nn.dynamic_rnn(cell=lstm, inputs=batch, dtype=tf.float32, time_major=True)   # for TI-VS must use dynamic rnn
+        outputs, _ = tf.compat.v1.nn.dynamic_rnn(cell=lstm, inputs=batch, dtype=tf.float16, time_major=True)   # for TI-VS must use dynamic rnn
         embedded = outputs[-1]                            # the last ouput is the embedded d-vector
         embedded = normalize(embedded)                    # normalize
 

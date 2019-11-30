@@ -64,7 +64,6 @@ def random_batch(speaker_num=config.N, utter_num=config.M, shuffle=True, noise_f
     # TI-SV
     else:
         np_file_list = os.listdir(path)
-        print(np_file_list)
         total_speaker = len(np_file_list)
 
         if shuffle:
@@ -80,7 +79,6 @@ def random_batch(speaker_num=config.N, utter_num=config.M, shuffle=True, noise_f
                 utter_batch.append(utters[utter_index])       # each speakers utterance [M, n_mels, frames] is appended
             else:
                 utter_batch.append(utters[utter_start: utter_start+utter_num])
-        print(len(utter_batch))
         utter_batch = np.concatenate(utter_batch, axis=0)     # utterance batch [batch(NM), n_mels, frames]
 
         if config.train:
@@ -178,9 +176,9 @@ def optim(lr):
 # for check
 if __name__ == "__main__":
     random_batch()
-    w= tf.constant([1], dtype= tf.float32)
-    b= tf.constant([0], dtype= tf.float32)
-    embedded = tf.constant([[0,1,0],[0,0,1], [0,1,0], [0,1,0], [1,0,0], [1,0,0]], dtype= tf.float32)
+    w= tf.constant([1], dtype= tf.float16)
+    b= tf.constant([0], dtype= tf.float16)
+    embedded = tf.constant([[0,1,0],[0,0,1], [0,1,0], [0,1,0], [1,0,0], [1,0,0]], dtype= tf.float16)
     sim_matrix = similarity(embedded,w,b,3,2,3)
     loss1 = loss_cal(sim_matrix, type="softmax",N=3,M=2)
     loss2 = loss_cal(sim_matrix, type="contrast",N=3,M=2)

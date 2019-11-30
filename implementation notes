@@ -22,3 +22,11 @@ IMPROVEMENTS:
 enroll_embed - mean of utterances(centroid), mean of verif_embed during test
 verif_embed - all utterances of speaker and (what is important) also splitted to non silent parts
 centroid embedding should be same as separate embeddings!
+
+autovc params:
+embedding - 256
+mel size - 80
+
+E2EGL default params:
+embedding - 256 - but implementation has bug, should set it for tisv
+mel size - 40

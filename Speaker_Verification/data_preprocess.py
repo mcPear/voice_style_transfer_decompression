@@ -104,7 +104,7 @@ def save_spectrogram_tisv():
     print("total speaker number : %d"%total_speaker_num)
     print("train : %d, test : %d"%(train_speaker_num, total_speaker_num-train_speaker_num))
     for i, folder in enumerate(os.listdir(audio_path)):
-        if not path.exists(os.path.join(config.train_path, "speaker%d.npy"%i)) and i != 86: #Maciek's hot-fix
+        if i != 86: #Maciek's hot-fix; and not path.exists(os.path.join(config.train_path, "speaker%d.npy"%i))
             speaker_path = os.path.join(audio_path, folder)     # path of each speaker
             print("%dth speaker processing..."%i)
             utterances_spec = []
@@ -119,7 +119,7 @@ def save_spectrogram_tisv():
                         S = librosa.core.stft(y=utter_part, n_fft=config.nfft,
                                               win_length=int(config.window * sr), hop_length=int(config.hop * sr))
                         S = np.abs(S) ** 2
-                        mel_basis = librosa.filters.mel(sr=config.sr, n_fft=config.nfft, n_mels=40)
+                        mel_basis = librosa.filters.mel(sr=config.sr, n_fft=config.nfft, n_mels=config.mel_size)
                         S = np.log10(np.dot(mel_basis, S) + 1e-6)           # log mel spectrogram of utterances
 
                         utterances_spec.append(S[:, :config.tisv_frame])    # first 180 frames of partial utterance

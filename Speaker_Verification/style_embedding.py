@@ -30,7 +30,7 @@ def to_spectrogram(utter_path):
             S = librosa.core.stft(y=utter_part, n_fft=config.nfft,
                                   win_length=int(config.window * sr), hop_length=int(config.hop * sr))
             S = np.abs(S) ** 2
-            mel_basis = librosa.filters.mel(sr=config.sr, n_fft=config.nfft, n_mels=40)
+            mel_basis = librosa.filters.mel(sr=config.sr, n_fft=config.nfft, n_mels=config.mel_size)
             S = np.log10(np.dot(mel_basis, S) + 1e-6)           # log mel spectrogram of utterances
 
             utterances_spec.append(S[:, :config.tisv_frame])    # first 180 frames of partial utterance
@@ -48,15 +48,15 @@ def embed(path, wav_path):
     N=1
     M=1
     # draw graph
-    enroll = placeholder(shape=[None, uttr_count, 40], dtype=tf.float32) # enrollment batch (time x batch x n_mel)
-    verif = placeholder(shape=[None, uttr_count, 40], dtype=tf.float32)  # verification batch (time x batch x n_mel)
+    enroll = placeholder(shape=[None, uttr_count, 40], dtype=tf.float16) # enrollment batch (time x batch x n_mel)
+    verif = placeholder(shape=[None, uttr_count, 40], dtype=tf.float16)  # verification batch (time x batch x n_mel)
     batch = tf.compat.v1.concat([enroll, verif], axis=1)
 
     # embedding lstm (3-layer default)
     with tf.compat.v1.variable_scope("lstm"):
         lstm_cells = [LSTMCell(num_units=config.hidden, num_proj=config.proj) for i in range(config.num_layer)]
         lstm = MultiRNNCell(lstm_cells)    # make lstm op and variables
-        outputs, _ = tf.compat.v1.nn.dynamic_rnn(cell=lstm, inputs=batch, dtype=tf.float32, time_major=True)   # for TI-VS must use dynamic rnn
+        outputs, _ = tf.compat.v1.nn.dynamic_rnn(cell=lstm, inputs=batch, dtype=tf.float16, time_major=True)   # for TI-VS must use dynamic rnn
         embedded = outputs[-1]                            # the last ouput is the embedded d-vector
         embedded = normalize(embedded)                    # normalize
 
