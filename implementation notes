@@ -30,3 +30,8 @@ mel size - 80
 E2EGL default params:
 embedding - 256 - but implementation has bug, should set it for tisv
 mel size - 40
+------
+Dekompresja
+Czy inny rozmiar wypowiedzi zmieni zawartość informacji o treści/stylu w embeddingu ?
+Czy to będzie ten sam sposób uczenia i loss?
+Można zachować już wyuczone wagi i od nich startować, albo uczyć tylko warstwę embeddingu, a resztę usztywnić.
