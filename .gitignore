@@ -110,3 +110,13 @@ autovc.ckpt
 .ipynb_checkpoints
 __pycache__
 results.pkl
+
+#Speaker_verification
+
+clean_testset_wav
+noise
+noisy_testset_wav
+test_tisv
+train_tisv
+VCTK-Corpus
+

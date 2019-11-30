@@ -1,0 +1,24 @@
+Noatki AutoVC
+
+AUTOVC works on the speech mel-spectrogram of size N-by-T, where N is the number of mel-frequency bins and T is
+the number of time steps (frames).
+As shown in Fig. 3(a), the input to the content encoder is the
+80-dimensional mel-spectrogram of X1 concatenated with
+the speaker embedding, Es(X1), at each time step. 
+
+In our implementation, the frame rate of the
+mel-spetrogram is 62.5 Hz and the sampling rate of speech
+waveform is 16 kHz.
+
+ZADANIA:
+1. Wypowiedź -> mel - jaka wypowiedź, jakie parametry mel ?
+2. mel -> style mebedding - TD czy TI ? jaki rozmiar, jak ?
+3. Transformacja embeddingu i mel tak, żeby odpowiadało wejściu AutoVC i odpalenie
+
+IMPROVEMENTS:
+1. train style encoder on all utterances(without train/test split)
+1. train style encoder in text dependent version (handles noise propably but do we need it?)
+
+enroll_embed - mean of utterances(centroid), mean of verif_embed during test
+verif_embed - all utterances of speaker and (what is important) also splitted to non silent parts
+centroid embedding should be same as separate embeddings!
