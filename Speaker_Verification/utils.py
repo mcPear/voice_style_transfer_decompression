@@ -133,7 +133,8 @@ def similarity(embedded, w, b, N=config.N, M=config.M, P=config.proj, center=Non
                         in range(N)],
                        axis=1) for j in range(N)], axis=0)
 
-    S = tf.abs(w)*S+b   # rescaling
+    w_abs = tf.dtypes.cast(tf.abs(w), tf.float32)
+    S = w_abs*S+b   # rescaling
 
     return S
 

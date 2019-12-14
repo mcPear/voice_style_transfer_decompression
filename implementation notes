@@ -35,3 +35,21 @@ Dekompresja
 Czy inny rozmiar wypowiedzi zmieni zawartość informacji o treści/stylu w embeddingu ?
 Czy to będzie ten sam sposób uczenia i loss?
 Można zachować już wyuczone wagi i od nich startować, albo uczyć tylko warstwę embeddingu, a resztę usztywnić.
+
+Podczas ładowania modelu trzeba sprawdzić jaki model_num daje najmniejszy błąd.
+
+!!@@!!Praca w dockerze gpu wymaga restartowania kernela po modyfikacji pliku i podawania wewnętrznych ścieżek kontenera
+
+Model wyuczył się na float32(DT_FLOAT), a powinien na float16(DT_HALF), bo byłoby szybciej. Nie wiem dlaczego podczas testu graf był float16, a podczas treningu uczył się float32...
+Jeśli będzie wolny feedforward na float32 to można jeszcze raz wyuczyć na float16, ale prawdopodobnie nie będzie trzeba. Dodałem funkcję printującą graf z typami zmiennych.
+
+Batche:
+enrollment - średnia z kilku
+verif - pojedynczy ostatni
+ale ten podział jest tylko w test
+w train jest jeden batch
+
+Split działa tak, ze dzieli na części gdzie jest głos (>20db) i wybiera pierwsze i ostatnie 180 ramek z każdej części.
+Ciekawe czemu nie wszystkie ?
+
+Jest problem z długością spektrogramu. Nie wiem czy to zależy od sampling rate, ale w autoVC są dużo krótze te spektrogramy. Trzeba wziąć wypowiedź i spektogram i rozkminić jak oni zamieniają, a potem może będzie trzeba wyuczyć na takich parametrach...
