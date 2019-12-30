@@ -53,3 +53,7 @@ Split działa tak, ze dzieli na części gdzie jest głos (>20db) i wybiera pier
 Ciekawe czemu nie wszystkie ?
 
 Jest problem z długością spektrogramu. Nie wiem czy to zależy od sampling rate, ale w autoVC są dużo krótze te spektrogramy. Trzeba wziąć wypowiedź i spektogram i rozkminić jak oni zamieniają, a potem może będzie trzeba wyuczyć na takich parametrach...
+
+------------Voice Conversion, Chou et al.-------------
+W kroku pierwszym uczymy się kodować treść ucząc autokodera i minimalizujac prawdopodobieństwo, że wypowiedź należy do tego mówcy, żeby uniezależnić embedding od mówcy. Ale nie wiem jak jest liczone to prawdopodobieństwo.
+Można zaatakować na większym zbiorze.

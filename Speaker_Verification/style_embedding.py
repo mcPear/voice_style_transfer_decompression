@@ -42,11 +42,15 @@ def to_mel_split(utter,sr):
     print("spectrogram: ",utterances_spec.shape)
     return utterances_spec
 
-def to_mel(utter,sr):
-    S = librosa.core.stft(y=utter, n_fft=config.nfft,
-                          win_length=int(config.window * sr), hop_length=int(config.hop * sr))
+def to_mel(utter,sr,nfft=config.nfft, win_length=None, hop_length=None):
+    if win_length:
+        win_length = int(config.window * sr)
+    if hop_length:
+        hop_length = int(config.hop * sr)
+    S = librosa.core.stft(y=utter, n_fft=nfft,
+                          win_length=win_length, hop_length=hop_length)
     S = np.abs(S) ** 2
-    mel_basis = librosa.filters.mel(sr=config.sr, n_fft=config.nfft, n_mels=config.mel_size)
+    mel_basis = librosa.filters.mel(sr=config.sr, n_fft=nfft, n_mels=config.mel_size)
     S = np.log10(np.dot(mel_basis, S) + 1e-6)           # log mel spectrogram of utterances
 
     return S
@@ -56,7 +60,7 @@ def embed(wav_path, name):
     utter, sr = librosa.core.load(wav_path, config.sr)
     mel_split = to_mel_split(utter, sr)
     uttr_count = len(mel_split)
-    mel = to_mel(utter, sr)
+    mel = to_mel(utter,16000,1024, None, 256) #autovc params
     
     tf.compat.v1.reset_default_graph()
 
