@@ -120,3 +120,7 @@ test_tisv
 train_tisv
 VCTK-Corpus
 
+#Voice conversion
+model_vctk
+vctk_old/data.h5
+
