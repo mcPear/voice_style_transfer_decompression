@@ -38,6 +38,7 @@ if __name__ == '__main__':
             # divide into groups
             sub_filename = filename.strip().split('/')[-1]
             # format: p{speaker}_{sid}.wav
+            print(sub_filename, re.search(r'p(\d+)_(\d+)\.wav', sub_filename)) #need to delete raw wav
             speaker_id, utt_id = re.search(r'p(\d+)_(\d+)\.wav', sub_filename).groups()
             filename_groups[speaker_id].append(filename)
         for speaker_id, filenames in filename_groups.items():

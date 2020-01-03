@@ -18,7 +18,7 @@
     "batch_size": 32,
     "lat_sched_iters": 1,
     "enc_pretrain_iters": 8000,
-    "dis_pretrain_iters": 20000,
+    "dis_pretrain_iters": 20,
     "patch_iters": 1,
-    "iters": 80000
+    "iters": 1
 }
