@@ -124,5 +124,5 @@ voice_conversion/vctk_old/data.h5
 
 #Voice conversion
 model_vctk
-vctk_old/data.h5
+voice_conversion/vctk_old
 

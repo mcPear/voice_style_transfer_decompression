@@ -107,8 +107,9 @@ class Hps(object):
             json.dump(self._hps._asdict(), f_json, indent=4, separators=(',', ': '))
 
 class DataLoader(object):
-    def __init__(self, dataset, batch_size=16):
+    def __init__(self, dataset, dataset_trg, batch_size=16):
         self.dataset = dataset
+        self.dataset_trg = dataset_trg
         self.n_elements = len(self.dataset[0])
         self.batch_size = batch_size
         self.index = 0
@@ -131,12 +132,16 @@ class DataLoader(object):
         samples = [self.dataset[self.index + i] for i in range(self.batch_size)]
         batch = [[s for s in sample] for sample in zip(*samples)]
         batch_tensor = [torch.from_numpy(np.array(data)) for data in batch]
+        
+        samples_trg = [self.dataset_trg[self.index + i] for i in range(self.batch_size)]
+        batch_trg = [[s for s in sample] for sample in zip(*samples_trg)]
+        batch_tensor_trg = [torch.from_numpy(np.array(data)) for data in batch_trg]
 
         if self.index + 2 * self.batch_size >= len(self.dataset):
             self.index = 0
         else:
             self.index += self.batch_size
-        return tuple(batch_tensor)
+        return (tuple(batch_tensor),tuple(batch_tensor_trg))
 
 class SingleDataset(data.Dataset):
     def __init__(self, h5_path, index_path, dset='train', seg_len=128):

@@ -20,19 +20,20 @@ def read_speaker_info(path='/storage/datasets/VCTK/VCTK-Corpus/speaker-info.txt'
 
 
 if __name__ == '__main__':
-    if len(sys.argv) < 4:
+    if len(sys.argv) < 5:
         print('usage: python3 make_dataset_vctk.py [data root directory (VCTK-Corpus)] [h5py path] '
-                '[training proportion]')
+                '[training proportion] [wav_dir_name]')
         exit(0)
 
     root_dir = sys.argv[1]
     h5py_path = sys.argv[2]
     proportion = float(sys.argv[3])
+    wav_dir_name = sys.argv[4]
 
     accent2speaker = read_speaker_info(os.path.join(root_dir, 'speaker-info.txt'))
     filename_groups = defaultdict(lambda : [])
     with h5py.File(h5py_path, 'w') as f_h5:
-        filenames = sorted(glob.glob(os.path.join(root_dir, 'wav48/*/*.wav')))
+        filenames = sorted(glob.glob(os.path.join(root_dir, wav_dir_name+'/*/*.wav')))
         for filename in filenames:
             # divide into groups
             sub_filename = filename.strip().split('/')[-1]

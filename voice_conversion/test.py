@@ -10,12 +10,13 @@ import glob
 import os
 import argparse
 from solver import Solver
+import matplotlib.pyplot as plot
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-hps', help='The path of hyper-parameter set', default='vctk.json')
-    parser.add_argument('-model', '-m', help='The path of model checkpoint', default="model_vctk/model_vctk-80000")
-    parser.add_argument('-source', '-s', help='The path of source .wav file', default="test/p225_002.wav")
+    parser.add_argument('-model', '-m', help='The path of model checkpoint', default="model_vctk/model_vctk-0")
+    parser.add_argument('-source', '-s', help='The path of source .wav file', default="test/p225_002-8.wav")
     parser.add_argument('-target', '-t', help='Target speaker id (integer). Same order as the speaker list when preprocessing (en_speaker_used.txt)', default=18, type=int)
     parser.add_argument('-output', '-o', help='output .wav path', default="test/output.wav")
     parser.add_argument('-sample_rate', '-sr', default=16000, type=int)
@@ -36,3 +37,31 @@ if __name__ == '__main__':
     result = result.squeeze(axis=0).transpose((1, 0))
     wav_data = spectrogram2wav(result)
     write(args.output, rate=args.sample_rate, data=wav_data)
+
+    print(result[0].shape)
+    
+    plot.subplot(211)
+
+    plot.title('Spectrogram of a wav file with piano music')
+
+
+
+    plot.plot(wav_data)
+
+    plot.xlabel('Sample')
+
+    plot.ylabel('Amplitude')
+
+
+
+    plot.subplot(212)
+
+    #plot.specgram(result,Fs=args.sample_rate)
+
+    plot.xlabel('Time')
+
+    plot.ylabel('Frequency')
+
+
+
+    plot.show()

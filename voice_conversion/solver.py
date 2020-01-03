@@ -98,9 +98,11 @@ class Solver(object):
         return x_tilde.data.cpu().numpy()
 
     def permute_data(self, data):
+        data, data_trg = data
         C = to_var(data[0], requires_grad=False)
         X = to_var(data[1]).permute(0, 2, 1)
-        return C, X
+        X_trg = to_var(data_trg[1]).permute(0, 2, 1)
+        return C, X, X_trg
 
     def sample_c(self, size):
         n_speakers = self.hps.n_speakers
@@ -148,11 +150,11 @@ class Solver(object):
         if mode == 'pretrain_G':
             for iteration in range(hps.enc_pretrain_iters):
                 data = next(self.data_loader)
-                c, x = self.permute_data(data)
+                c, x, x_trg = self.permute_data(data)
                 # encode
                 enc = self.encode_step(x)
                 x_tilde = self.decode_step(enc, c)
-                loss_rec = torch.mean(torch.abs(x_tilde - x))
+                loss_rec = torch.mean(torch.abs(x_tilde - x_trg))
                 reset_grad([self.Encoder, self.Decoder])
                 loss_rec.backward()
                 grad_clip([self.Encoder, self.Decoder], self.hps.max_grad_norm)
@@ -170,7 +172,7 @@ class Solver(object):
         elif mode == 'pretrain_D':
             for iteration in range(hps.dis_pretrain_iters):
                 data = next(self.data_loader)
-                c, x = self.permute_data(data)
+                c, x, _ = self.permute_data(data)
                 # encode
                 enc = self.encode_step(x)
                 # classify speaker
@@ -198,7 +200,7 @@ class Solver(object):
                 #=======train D=========#
                 for step in range(hps.n_patch_steps):
                     data = next(self.data_loader)
-                    c, x = self.permute_data(data)
+                    c, x, x_trg = self.permute_data(data)
                     ## encode
                     enc = self.encode_step(x)
                     # sample c
@@ -206,7 +208,7 @@ class Solver(object):
                     # generator
                     x_tilde = self.gen_step(enc, c_prime)
                     # discriminstor
-                    w_dis, real_logits, gp = self.patch_step(x, x_tilde, is_dis=True)
+                    w_dis, real_logits, gp = self.patch_step(x_trg, x_tilde, is_dis=True)
                     # aux classification loss 
                     loss_clf = self.cal_loss(real_logits, c)
                     loss = -hps.beta_dis * w_dis + hps.beta_clf * loss_clf + hps.lambda_ * gp
@@ -230,7 +232,7 @@ class Solver(object):
                             self.logger.scalar_summary(tag, value, iteration + 1)
                 #=======train G=========#
                 data = next(self.data_loader)
-                c, x = self.permute_data(data)
+                c, x, x_trg = self.permute_data(data)
                 # encode
                 enc = self.encode_step(x)
                 # sample c
@@ -238,7 +240,7 @@ class Solver(object):
                 # generator
                 x_tilde = self.gen_step(enc, c_prime)
                 # discriminstor
-                loss_adv, fake_logits = self.patch_step(x, x_tilde, is_dis=False)
+                loss_adv, fake_logits = self.patch_step(x_trg, x_tilde, is_dis=False)
                 # aux classification loss 
                 loss_clf = self.cal_loss(fake_logits, c_prime)
                 loss = hps.beta_clf * loss_clf + hps.beta_gen * loss_adv
@@ -271,7 +273,7 @@ class Solver(object):
                 #==================train D==================#
                 for step in range(hps.n_latent_steps):
                     data = next(self.data_loader)
-                    c, x = self.permute_data(data)
+                    c, x, _ = self.permute_data(data)
                     # encode
                     enc = self.encode_step(x)
                     # classify speaker
@@ -297,12 +299,12 @@ class Solver(object):
                             self.logger.scalar_summary(tag, value, iteration + 1)
                 #==================train G==================#
                 data = next(self.data_loader)
-                c, x = self.permute_data(data)
+                c, x, x_trg = self.permute_data(data)
                 # encode
                 enc = self.encode_step(x)
                 # decode
                 x_tilde = self.decode_step(enc, c)
-                loss_rec = torch.mean(torch.abs(x_tilde - x))
+                loss_rec = torch.mean(torch.abs(x_tilde - x_trg))
                 # classify speaker
                 logits = self.clf_step(enc)
                 acc = cal_acc(logits, c)
