@@ -20,6 +20,7 @@ from utils import cal_acc
 from utils import cc
 from utils import calculate_gradients_penalty
 from utils import gen_noise
+from plots import plot
 
 class Solver(object):
     def __init__(self, hps, data_loader, log_dir='./log/'):
@@ -265,6 +266,7 @@ class Solver(object):
                     self.save_model(model_path, iteration + hps.iters)
         elif mode == 'train':
             for iteration in range(hps.iters):
+                # iteration+= ile było ?
                 # calculate current alpha
                 if iteration < hps.lat_sched_iters:
                     current_alpha = hps.alpha_enc * (iteration / hps.lat_sched_iters)

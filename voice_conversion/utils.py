@@ -13,6 +13,7 @@ import torch
 from torch.utils import data
 from tensorboardX import SummaryWriter
 from torch.autograd import Variable
+from plots import plot
 
 def cc(net):
     if torch.cuda.is_available():
@@ -114,17 +115,6 @@ class DataLoader(object):
         self.batch_size = batch_size
         self.index = 0
 
-    def all(self, size=1000):
-        samples = [self.dataset[self.index + i] for i in range(size)]
-        batch = [[s for s in sample] for sample in zip(*samples)]
-        batch_tensor = [torch.from_numpy(np.array(data)) for data in batch]
-
-        if self.index + 2 * self.batch_size >= len(self.dataset):
-            self.index = 0
-        else:
-            self.index += self.batch_size
-        return tuple(batch_tensor)
-
     def __iter__(self):
         return self
 
@@ -137,6 +127,8 @@ class DataLoader(object):
         batch_trg = [[s for s in sample] for sample in zip(*samples_trg)]
         batch_tensor_trg = [torch.from_numpy(np.array(data)) for data in batch_trg]
 
+        #plot(samples[0][1].T, samples_trg[0][1].T)
+        
         if self.index + 2 * self.batch_size >= len(self.dataset):
             self.index = 0
         else:
