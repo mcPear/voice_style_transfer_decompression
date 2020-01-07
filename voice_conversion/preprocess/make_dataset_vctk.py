@@ -5,8 +5,7 @@ import os
 import glob
 import re
 from collections import defaultdict
-#from tacotron.audio import load_wav, spectrogram, melspectrogram
-from tacotron.norm_utils import get_spectrograms 
+from tacotron.norm_utils import get_spectrogram 
 
 def read_speaker_info(path='/storage/datasets/VCTK/VCTK-Corpus/speaker-info.txt'):
     accent2speaker = defaultdict(lambda: [])
@@ -20,15 +19,16 @@ def read_speaker_info(path='/storage/datasets/VCTK/VCTK-Corpus/speaker-info.txt'
 
 
 if __name__ == '__main__':
-    if len(sys.argv) < 5:
+    if len(sys.argv) < 6:
         print('usage: python3 make_dataset_vctk.py [data root directory (VCTK-Corpus)] [h5py path] '
-                '[training proportion] [wav_dir_name]')
+                '[training proportion] [wav_dir_name] [wavenet_mel]')
         exit(0)
 
     root_dir = sys.argv[1]
     h5py_path = sys.argv[2]
     proportion = float(sys.argv[3])
     wav_dir_name = sys.argv[4]
+    wavenet_mel = sys.argv[5]
 
     accent2speaker = read_speaker_info(os.path.join(root_dir, 'speaker-info.txt'))
     filename_groups = defaultdict(lambda : [])
@@ -51,10 +51,10 @@ if __name__ == '__main__':
                 sub_filename = filename.strip().split('/')[-1]
                 # format: p{speaker}_{sid}.wav
                 speaker_id, utt_id = re.search(r'p(\d+)_(\d+)\.wav', sub_filename).groups()
-                _, lin_spec = get_spectrograms(filename)
+                spec = get_spectrogram(filename, wavenet_mel)
                 if i < train_size:
                     datatype = 'train'
                 else:
                     datatype = 'test'
                 f_h5.create_dataset(f'{datatype}/{speaker_id}/{utt_id}', \
-                    data=lin_spec, dtype=np.float32)
+                    data=spec, dtype=np.float32)

@@ -266,7 +266,6 @@ class Solver(object):
                     self.save_model(model_path, iteration + hps.iters)
         elif mode == 'train':
             for iteration in range(hps.iters):
-                # iteration+= ile było ?
                 # calculate current alpha
                 if iteration < hps.lat_sched_iters:
                     current_alpha = hps.alpha_enc * (iteration / hps.lat_sched_iters)
