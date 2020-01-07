@@ -5,7 +5,7 @@ import os
 import glob
 import re
 from collections import defaultdict
-from tacotron.norm_utils import get_spectrogram 
+from preprocess.tacotron.norm_utils import get_spectrogram 
 
 def read_speaker_info(path='/storage/datasets/VCTK/VCTK-Corpus/speaker-info.txt'):
     accent2speaker = defaultdict(lambda: [])

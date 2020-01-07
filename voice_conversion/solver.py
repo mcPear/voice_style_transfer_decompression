@@ -23,21 +23,22 @@ from utils import gen_noise
 from plots import plot
 
 class Solver(object):
-    def __init__(self, hps, data_loader, log_dir='./log/'):
+    def __init__(self, hps, data_loader, wavenet_mel, log_dir='./log/'):
         self.hps = hps
         self.data_loader = data_loader
         self.model_kept = []
         self.max_keep = 100
-        self.build_model()
+        self.build_model(wavenet_mel)
         self.logger = Logger(log_dir)
 
-    def build_model(self):
+    def build_model(self, wavenet_mel):
         hps = self.hps
         ns = self.hps.ns
         emb_size = self.hps.emb_size
-        self.Encoder = cc(Encoder(ns=ns, dp=hps.enc_dp))
-        self.Decoder = cc(Decoder(ns=ns, c_a=hps.n_speakers, emb_size=emb_size))
-        self.Generator = cc(Decoder(ns=ns, c_a=hps.n_speakers, emb_size=emb_size))
+        c = 80 if wavenet_mel else 513
+        self.Encoder = cc(Encoder(c_in=c,ns=ns, dp=hps.enc_dp))
+        self.Decoder = cc(Decoder(c_out=c, ns=ns, c_a=hps.n_speakers, emb_size=emb_size))
+        self.Generator = cc(Decoder(c_out=c, ns=ns, c_a=hps.n_speakers, emb_size=emb_size))
         self.SpeakerClassifier = cc(SpeakerClassifier(ns=ns, n_class=hps.n_speakers, dp=hps.dis_dp))
         self.PatchDiscriminator = cc(nn.DataParallel(PatchDiscriminator(ns=ns, n_class=hps.n_speakers)))
         betas = (0.5, 0.9)
