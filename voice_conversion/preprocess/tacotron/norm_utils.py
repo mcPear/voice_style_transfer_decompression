@@ -42,7 +42,10 @@ hp = hyperparams()
 def get_spectrogram(fpath, wavenet_mel=False):
     
     if wavenet_mel:
-        return gen_mel(fpath)
+        mel=gen_mel(fpath)
+        print(mel.shape)
+        print(mel)
+        return mel.astype(np.float32) #todo test it
     
     '''Returns normalized log(melspectrogram) and log(magnitude) from `sound_file`.
     Args:
@@ -102,7 +105,8 @@ def get_spectrogram(fpath, wavenet_mel=False):
     # Transpose
     #mel = mel.T.astype(np.float32)  # (T, n_mels)
     mag = mag.T.astype(np.float32)  # (T, 1+n_fft//2)
-
+    print(mag.shape)
+    print(mag)
     return mag
 
 
