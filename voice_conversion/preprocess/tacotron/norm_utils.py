@@ -42,72 +42,70 @@ hp = hyperparams()
 def get_spectrogram(fpath, wavenet_mel=False):
     
     if wavenet_mel:
-        mel=gen_mel(fpath)
-        print(mel.shape)
-        print(mel)
-        return mel.astype(np.float32) #todo test it
-    
-    '''Returns normalized log(melspectrogram) and log(magnitude) from `sound_file`.
-    Args:
-      sound_file: A string. The full path of a sound file.
+        mel=gen_mel(fpath).astype(np.float32)
+        #print(mel.shape)
+        return mel 
+    else: 
+        '''Returns normalized log(melspectrogram) and log(magnitude) from `sound_file`.
+        Args:
+          sound_file: A string. The full path of a sound file.
 
-    Returns:
-      #mel: A 2d array of shape (T, n_mels) <- Transposed
-      mag: A 2d array of shape (T, 1+n_fft/2) <- Transposed
-    '''
-    # num = np.random.randn()
-    # if num < .2:
-    #     y, sr = librosa.load(fpath, sr=hp.sr)
-    # else:
-    #     if num < .4:
-    #         tempo = 1.1
-    #     elif num < .6:
-    #         tempo = 1.2
-    #     elif num < .8:
-    #         tempo = 0.9
-    #     else:
-    #         tempo = 0.8
-    #     cmd = "ffmpeg -i {} -y ar {} -hide_banner -loglevel panic -ac 1 -filter:a atempo={} -vn temp.wav".format(fpath, hp.sr, tempo)
-    #     os.system(cmd)
-    #     y, sr = librosa.load('temp.wav', sr=hp.sr)
+        Returns:
+          #mel: A 2d array of shape (T, n_mels) <- Transposed
+          mag: A 2d array of shape (T, 1+n_fft/2) <- Transposed
+        '''
+        # num = np.random.randn()
+        # if num < .2:
+        #     y, sr = librosa.load(fpath, sr=hp.sr)
+        # else:
+        #     if num < .4:
+        #         tempo = 1.1
+        #     elif num < .6:
+        #         tempo = 1.2
+        #     elif num < .8:
+        #         tempo = 0.9
+        #     else:
+        #         tempo = 0.8
+        #     cmd = "ffmpeg -i {} -y ar {} -hide_banner -loglevel panic -ac 1 -filter:a atempo={} -vn temp.wav".format(fpath, hp.sr, tempo)
+        #     os.system(cmd)
+        #     y, sr = librosa.load('temp.wav', sr=hp.sr)
 
-    # Loading sound file
-    y, sr = librosa.load(fpath, sr=hp.sr)
+        # Loading sound file
+        y, sr = librosa.load(fpath, sr=hp.sr)
 
 
-    # Trimming
-    y, _ = librosa.effects.trim(y)
+        # Trimming
+        y, _ = librosa.effects.trim(y)
 
-    # Preemphasis
-    y = np.append(y[0], y[1:] - hp.preemphasis * y[:-1])
+        # Preemphasis
+        y = np.append(y[0], y[1:] - hp.preemphasis * y[:-1])
 
-    # stft
-    linear = librosa.stft(y=y,
-                          n_fft=hp.n_fft,
-                          hop_length=hp.hop_length,
-                          win_length=hp.win_length)
+        # stft
+        linear = librosa.stft(y=y,
+                              n_fft=hp.n_fft,
+                              hop_length=hp.hop_length,
+                              win_length=hp.win_length)
 
-    # magnitude spectrogram
-    mag = np.abs(linear)  # (1+n_fft//2, T)
+        # magnitude spectrogram
+        mag = np.abs(linear)  # (1+n_fft//2, T)
 
-    # mel spectrogram
-    #mel_basis = librosa.filters.mel(hp.sr, hp.n_fft, hp.n_mels)  # (n_mels, 1+n_fft//2)
-    #mel = np.dot(mel_basis, mag)  # (n_mels, t)
+        # mel spectrogram
+        #mel_basis = librosa.filters.mel(hp.sr, hp.n_fft, hp.n_mels)  # (n_mels, 1+n_fft//2)
+        #mel = np.dot(mel_basis, mag)  # (n_mels, t)
 
-    # to decibel
-    #mel = 20 * np.log10(np.maximum(1e-5, mel))
-    mag = 20 * np.log10(np.maximum(1e-5, mag))
+        # to decibel
+        #mel = 20 * np.log10(np.maximum(1e-5, mel))
+        mag = 20 * np.log10(np.maximum(1e-5, mag))
 
-    # normalize
-    #mel = np.clip((mel - hp.ref_db + hp.max_db) / hp.max_db, 1e-8, 1)
-    mag = np.clip((mag - hp.ref_db + hp.max_db) / hp.max_db, 1e-8, 1)
+        # normalize
+        #mel = np.clip((mel - hp.ref_db + hp.max_db) / hp.max_db, 1e-8, 1)
+        mag = np.clip((mag - hp.ref_db + hp.max_db) / hp.max_db, 1e-8, 1)
 
-    # Transpose
-    #mel = mel.T.astype(np.float32)  # (T, n_mels)
-    mag = mag.T.astype(np.float32)  # (T, 1+n_fft//2)
-    print(mag.shape)
-    print(mag)
-    return mag
+        # Transpose
+        #mel = mel.T.astype(np.float32)  # (T, n_mels)
+        mag = mag.T.astype(np.float32)  # (T, 1+n_fft//2)
+        #print(mag.shape)
+        return mag
 
 
 def spectrogram2wav(mag):

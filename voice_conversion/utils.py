@@ -121,6 +121,9 @@ class DataLoader(object):
     def __next__(self):
         samples = [self.dataset[self.index + i] for i in range(self.batch_size)]
         batch = [[s for s in sample] for sample in zip(*samples)]
+        specs = batch[1]
+#         for spec in specs:
+#             print(spec.shape)
         batch_tensor = [torch.from_numpy(np.array(data)) for data in batch]
         
         samples_trg = [self.dataset_trg[self.index + i] for i in range(self.batch_size)]

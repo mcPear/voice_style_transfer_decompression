@@ -62,6 +62,7 @@ def start_and_end_indices(quantized, silence_threshold=2):
 
 def melspectrogram(y):
     D = _lws_processor().stft(y).T
+    #print(D.shape)
     S = _amp_to_db(_linear_to_mel(np.abs(D))) - hparams['ref_level_db']
     if not hparams['allow_clipping_in_normalization']:
         assert S.max() <= 0 and S.min() - hparams['min_level_db'] >= 0

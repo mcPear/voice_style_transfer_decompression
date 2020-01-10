@@ -28,7 +28,7 @@ if __name__ == '__main__':
     h5py_path = sys.argv[2]
     proportion = float(sys.argv[3])
     wav_dir_name = sys.argv[4]
-    wavenet_mel = sys.argv[5]
+    wavenet_mel = bool(float(sys.argv[5]))
 
     accent2speaker = read_speaker_info(os.path.join(root_dir, 'speaker-info.txt'))
     filename_groups = defaultdict(lambda : [])
@@ -38,7 +38,7 @@ if __name__ == '__main__':
             # divide into groups
             sub_filename = filename.strip().split('/')[-1]
             # format: p{speaker}_{sid}.wav
-            print(sub_filename, re.search(r'p(\d+)_(\d+)\.wav', sub_filename)) #need to delete raw wav
+            #print(sub_filename, re.search(r'p(\d+)_(\d+)\.wav', sub_filename)) #need to delete raw wav
             speaker_id, utt_id = re.search(r'p(\d+)_(\d+)\.wav', sub_filename).groups()
             filename_groups[speaker_id].append(filename)
         for speaker_id, filenames in filename_groups.items():
@@ -47,14 +47,19 @@ if __name__ == '__main__':
                 continue
             print('processing {}'.format(speaker_id))
             train_size = int(len(filenames) * proportion)
+            wavs = len(filenames)
+            too_short_wavs=0
             for i, filename in enumerate(filenames):
                 sub_filename = filename.strip().split('/')[-1]
                 # format: p{speaker}_{sid}.wav
                 speaker_id, utt_id = re.search(r'p(\d+)_(\d+)\.wav', sub_filename).groups()
                 spec = get_spectrogram(filename, wavenet_mel)
+                if spec.shape[0]<128:
+                    too_short_wavs+=1
                 if i < train_size:
                     datatype = 'train'
                 else:
                     datatype = 'test'
                 f_h5.create_dataset(f'{datatype}/{speaker_id}/{utt_id}', \
                     data=spec, dtype=np.float32)
+            print(f'{too_short_wavs}/{wavs} too short (<128)')
