@@ -103,26 +103,8 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-#autovc
-*.wav
-checkpoint_step001000000_ema.pth
-autovc.ckpt
-.ipynb_checkpoints
-__pycache__
-results.pkl
-
-#Speaker_verification
-
-clean_testset_wav
-noise
-noisy_testset_wav
-test_tisv
-train_tisv
-VCTK-Corpus
-
-voice_conversion/vctk_old/data.h5
-
-#Voice conversion
-model_vctk
-voice_conversion/vctk_old
-voice_conversion/autovc_wavenet_checkpoint_step001000000_ema.pth
+# big files
+data/VCTK-Corpus
+implementation/model_vctk
+implementation/vctk_old
+implementation/autovc_wavenet_checkpoint_step001000000_ema.pth
