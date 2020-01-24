@@ -57,3 +57,141 @@ Jest problem z długością spektrogramu. Nie wiem czy to zależy od sampling ra
 ------------Voice Conversion, Chou et al.-------------
 W kroku pierwszym uczymy się kodować treść ucząc autokodera i minimalizujac prawdopodobieństwo, że wypowiedź należy do tego mówcy, żeby uniezależnić embedding od mówcy. Ale nie wiem jak jest liczone to prawdopodobieństwo.
 Można zaatakować na większym zbiorze.
+
+
+-----
+#target
+processing 225
+9/231 too short (<128)
+processing 226
+1/356 too short (<128)
+processing 227
+1/389 too short (<128)
+processing 228
+8/366 too short (<128)
+processing 229
+38/379 too short (<128)
+processing 230
+5/397 too short (<128)
+processing 231
+55/456 too short (<128)
+processing 232
+54/412 too short (<128)
+processing 233
+8/372 too short (<128)
+processing 236
+39/492 too short (<128)
+processing 239
+11/503 too short (<128)
+processing 240
+25/377 too short (<128)
+processing 243
+5/393 too short (<128)
+processing 244
+0/420 too short (<128)
+processing 250
+37/481 too short (<128)
+processing 254
+52/397 too short (<128)
+processing 256
+0/319 too short (<128)
+processing 257
+105/434 too short (<128)
+processing 258
+56/414 too short (<128)
+processing 259
+4/481 too short (<128)
+processing 267
+14/417 too short (<128)
+processing 268
+0/406 too short (<128)
+processing 269
+19/396 too short (<128)
+processing 270
+22/462 too short (<128)
+processing 273
+17/433 too short (<128)
+processing 274
+3/466 too short (<128)
+processing 276
+6/462 too short (<128)
+processing 277
+49/459 too short (<128)
+processing 278
+6/409 too short (<128)
+processing 279
+18/405 too short (<128)
+processing 282
+7/368 too short (<128)
+processing 286
+8/468 too short (<128)
+processing 287
+2/424 too short (<128)
+
+#8bit
+processing 225
+9/231 too short (<128)
+processing 226
+1/356 too short (<128)
+processing 227
+1/389 too short (<128)
+processing 228
+6/366 too short (<128)
+processing 229
+30/379 too short (<128)
+processing 230
+5/397 too short (<128)
+processing 231
+40/456 too short (<128)
+processing 232
+48/412 too short (<128)
+processing 233
+5/372 too short (<128)
+processing 236
+31/492 too short (<128)
+processing 239
+8/503 too short (<128)
+processing 240
+19/377 too short (<128)
+processing 243
+5/393 too short (<128)
+processing 244
+0/420 too short (<128)
+processing 250
+29/481 too short (<128)
+processing 254
+39/397 too short (<128)
+processing 256
+0/319 too short (<128)
+processing 257
+92/434 too short (<128)
+processing 258
+53/414 too short (<128)
+processing 259
+3/481 too short (<128)
+processing 267
+7/417 too short (<128)
+processing 268
+0/406 too short (<128)
+processing 269
+19/396 too short (<128)
+processing 270
+19/462 too short (<128)
+processing 273
+12/433 too short (<128)
+processing 274
+1/466 too short (<128)
+processing 276
+5/462 too short (<128)
+processing 277
+45/459 too short (<128)
+processing 278
+5/409 too short (<128)
+processing 279
+16/405 too short (<128)
+processing 282
+7/368 too short (<128)
+processing 286
+4/468 too short (<128)
+processing 287
+2/424 too short (<128)
