@@ -104,7 +104,7 @@ venv.bak/
 .mypy_cache/
 
 # big files
-data/VCTK-Corpus
+data/VCTK-Corpus/wav*
 implementation/model_vctk
 implementation/vctk_old
 implementation/autovc_wavenet_checkpoint_step001000000_ema.pth
