@@ -1,4 +1,4 @@
-# Voice audio recordings decompression with neural style transfer
+# Voice recordings decompression with neural style transfer
 This is modification of [Multi-target Voice Conversion without Parallel Data by Adversarially Learning Disentangled Audio Representations](https://github.com/jjery2243542/voice\_conversion) for decompression problem.
 
 
@@ -10,7 +10,7 @@ First run ```change_bit_rate.sh``` from VCTK-Corpus to compress wavs to 8kbps mp
 Similar to [base repo](https://github.com/jjery2243542/voice\_conversion) but moved to jupyter notebooks.
 
 ### WaveNet synthesis
-Download [pretrained model](https://drive.google.com/file/d/1Zksy0ndlDezo9wclQNZYkGi\_6i7zi4nQ/view) (found in AutoVC repo) and move it to implementation directory.
+Download [pretrained model](https://drive.google.com/file/d/1Zksy0ndlDezo9wclQNZYkGi\_6i7zi4nQ/view) (found in [AutoVC repo](https://github.com/auspicious3000/autovc)) and move it to implementation directory.
 I use code from [r9y9's wavenet\_vocoder](https://github.com/r9y9/wavenet\_vocoder) for spectrograms generation and synthesis.
 
 ## Other notices
