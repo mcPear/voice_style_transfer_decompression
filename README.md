@@ -1,10 +1,3 @@
-Repozytorium wykorzystanego modelu transferu stylu [5]: \\https://github.com/jjery2243542/voice\_conversion
-
-Repozytorium WaveNet, z którego wykorzystano kod generowania mel-spektrogramu i rekonstrukcji ścieżki dźwiękowej: \\https://github.com/r9y9/wavenet\_vocoder
-
-Model WaveNet z repozytorium AutoVC pretrenowany na zbiorze VCTK:
-\\https://drive.google.com/file/d/1Zksy0ndlDezo9wclQNZYkGi\_6i7zi4nQ/view
-
 # Voice audio recordings decompression with neural style transfer
 This is modification of [Multi-target Voice Conversion without Parallel Data by Adversarially Learning Disentangled Audio Representations](https://github.com/jjery2243542/voice\_conversion) for decompression problem.
 
@@ -20,6 +13,6 @@ Similar to [base repo](https://github.com/jjery2243542/voice\_conversion) but mo
 Download [pretrained model](https://drive.google.com/file/d/1Zksy0ndlDezo9wclQNZYkGi\_6i7zi4nQ/view) (found in AutoVC repo) and move it to implementation directory.
 I use code from [r9y9's wavenet\_vocoder](https://github.com/r9y9/wavenet\_vocoder) for spectrograms generation and synthesis.
 
-#Other notices
+## Other notices
 I dont's use GAN mode because it learns about 80 hours on my RTX 2070, so it may not work.
 
