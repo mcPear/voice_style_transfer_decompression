@@ -4,7 +4,7 @@ This is modification of [Multi-target Voice Conversion without Parallel Data by 
 
 # Preprocess
 Model is trained on [CSTR VCTK Corpus](https://homepages.inf.ed.ac.uk/jyamagis/page3/page58/page58.html).
-First run change_bit_rate.sh from VCTK-Corpus to compress wavs to 8kbps mp3. Then run mp3_to_wav.sh to get wav from mp3. It's possible to omit the second step if you can generate spectrograms directly from mp3.
+First run ```change_bit_rate.sh``` from VCTK-Corpus to compress wavs to 8kbps mp3. Then run ```mp3_to_wav.sh``` to get wav from mp3. It's possible to omit the second step if you can generate spectrograms directly from mp3.
 
 ### Feature extraction, training, testing
 Similar to [base repo](https://github.com/jjery2243542/voice\_conversion) but moved to jupyter notebooks.
