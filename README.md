@@ -13,6 +13,3 @@ Similar to [base repo](https://github.com/jjery2243542/voice\_conversion) but mo
 Download [pretrained model](https://drive.google.com/file/d/1Zksy0ndlDezo9wclQNZYkGi\_6i7zi4nQ/view) (found in [AutoVC repo](https://github.com/auspicious3000/autovc)) and move it to implementation directory.
 I use code from [r9y9's wavenet\_vocoder](https://github.com/r9y9/wavenet\_vocoder) for spectrograms generation and synthesis.
 
-## Other notices
-I dont's use GAN mode because it learns about 80 hours on my RTX 2070, so it may not work.
-

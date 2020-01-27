@@ -67,7 +67,7 @@ def append_emb(emb, expand_size, output):
     return output
 
 class PatchDiscriminator(nn.Module):
-    def __init__(self, n_class=33, ns=0.2, dp=0.1):
+    def __init__(self, n_class=33, ns=0.2, dp=0.1, classify_kernel_size=None):
         super(PatchDiscriminator, self).__init__()
         self.ns = ns
         self.conv1 = nn.Conv2d(1, 64, kernel_size=5, stride=2)
@@ -76,9 +76,8 @@ class PatchDiscriminator(nn.Module):
         self.conv4 = nn.Conv2d(256, 512, kernel_size=5, stride=2)
         self.conv5 = nn.Conv2d(512, 512, kernel_size=5, stride=2)
         self.conv6 = nn.Conv2d(512, 32, kernel_size=1)
-        self.conv7 = nn.Conv2d(32, 1, kernel_size=(17, 4))
-        #self.conv_classify = nn.Conv2d(512, n_class, kernel_size=(17, 4))
-        self.conv_classify = nn.Conv2d(32, n_class, kernel_size=(17, 4))
+        self.conv7 = nn.Conv2d(32, 1, kernel_size=classify_kernel_size)
+        self.conv_classify = nn.Conv2d(32, n_class, kernel_size=classify_kernel_size)
         self.drop1 = nn.Dropout2d(p=dp)
         self.drop2 = nn.Dropout2d(p=dp)
         self.drop3 = nn.Dropout2d(p=dp)

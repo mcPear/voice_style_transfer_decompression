@@ -36,11 +36,12 @@ class Solver(object):
         ns = self.hps.ns
         emb_size = self.hps.emb_size
         c = 80 if wavenet_mel else 513
+        patch_classify_kernel = (3,4) if wavenet_mel else (17,4)
         self.Encoder = cc(Encoder(c_in=c,ns=ns, dp=hps.enc_dp))
         self.Decoder = cc(Decoder(c_out=c, ns=ns, c_a=hps.n_speakers, emb_size=emb_size))
         self.Generator = cc(Decoder(c_out=c, ns=ns, c_a=hps.n_speakers, emb_size=emb_size))
         self.SpeakerClassifier = cc(SpeakerClassifier(ns=ns, n_class=hps.n_speakers, dp=hps.dis_dp))
-        self.PatchDiscriminator = cc(nn.DataParallel(PatchDiscriminator(ns=ns, n_class=hps.n_speakers)))
+        self.PatchDiscriminator = cc(nn.DataParallel(PatchDiscriminator(ns=ns, n_class=hps.n_speakers, classify_kernel_size=patch_classify_kernel)))
         betas = (0.5, 0.9)
         params = list(self.Encoder.parameters()) + list(self.Decoder.parameters())
         self.ae_opt = optim.Adam(params, lr=self.hps.lr, betas=betas)
@@ -146,11 +147,11 @@ class Solver(object):
         loss = criterion(logits, y_true)
         return loss
 
-    def train(self, model_path, flag='train', mode='train'):
+    def train(self, model_path, flag='train', mode='train', resume_epoch=0):
         # load hyperparams
         hps = self.hps
         if mode == 'pretrain_G':
-            for iteration in range(hps.enc_pretrain_iters):
+            for iteration in range(resume_epoch, hps.enc_pretrain_iters):
                 data = next(self.data_loader)
                 c, x, x_trg = self.permute_data(data)
                 # encode
@@ -172,7 +173,7 @@ class Solver(object):
                     for tag, value in info.items():
                         self.logger.scalar_summary(tag, value, iteration + 1)
         elif mode == 'pretrain_D':
-            for iteration in range(hps.dis_pretrain_iters):
+            for iteration in range(resume_epoch, hps.dis_pretrain_iters):
                 data = next(self.data_loader)
                 c, x, _ = self.permute_data(data)
                 # encode
@@ -198,7 +199,7 @@ class Solver(object):
                     for tag, value in info.items():
                         self.logger.scalar_summary(tag, value, iteration + 1)
         elif mode == 'patchGAN':
-            for iteration in range(hps.patch_iters):
+            for iteration in range(resume_epoch, hps.patch_iters):
                 #=======train D=========#
                 for step in range(hps.n_patch_steps):
                     data = next(self.data_loader)
@@ -263,10 +264,10 @@ class Solver(object):
                 if iteration % 100 == 0:
                     for tag, value in info.items():
                         self.logger.scalar_summary(tag, value, iteration + 1)
-                if iteration % 1000 == 0 or iteration + 1 == hps.patch_iters:
+                if iteration % 500 == 0 or iteration + 1 == hps.patch_iters:
                     self.save_model(model_path, iteration + hps.iters)
         elif mode == 'train':
-            for iteration in range(hps.iters):
+            for iteration in range(resume_epoch, hps.iters):
                 # calculate current alpha
                 if iteration < hps.lat_sched_iters:
                     current_alpha = hps.alpha_enc * (iteration / hps.lat_sched_iters)
